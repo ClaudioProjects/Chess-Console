@@ -1,5 +1,6 @@
 ﻿using XadrezApp.Board;
 using XadrezApp.ChessGame;
+using XadrezApp.Board.Exceptions;
 
 namespace XadrezApp
 {
@@ -7,13 +8,25 @@ namespace XadrezApp
     {
         static void Main(string[] args)
         {
-            BoardTab board = new BoardTab(8, 8);
+            try
+            {
+                ChessMatch chessMatch = new();
 
-            board.putPice(new King(board, Color.Black), new Position(0, 0));
-            board.putPice(new Tower(board, Color.Black), new Position(0, 1));
-            board.putPice(new Tower(board, Color.Black), new Position(0, 2));
+                while (!chessMatch.finished)
+                {
+                    Console.Clear();
+                    Screen.ShowBoard(chessMatch.board);
+                    Console.WriteLine("");
+                    Console.Write("Origin: ");
+                    Position origin = Screen.readPositionChess().toPosition();
+                    Console.Write("Destiny: ");
+                    Position destiny = Screen.readPositionChess().toPosition();
 
-            Screen.ShowBoard(board);
+                    chessMatch.performMovement(origin, destiny);
+                }
+
+            }
+            catch (BoardException e) { Console.WriteLine(e.Message); }
         }
     }
 }
