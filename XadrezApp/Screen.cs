@@ -9,37 +9,64 @@ namespace XadrezApp
         {
             for (int i = 0; i < board.lines; i++)
             {
-                Console.Write(8 - i + " ");
+                Console.Write(" " + (8 - i) + " ");
                 for (int j = 0; j < board.columns; j++)
                 {
-                    if (board.chessPiece(i, j) != null)
-                    {
-                        showPiece(board.chessPiece(i, j));
-                        Console.Write(" ");
-                    }
-                    else 
-                    {
-                        Console.Write("- "); 
-                    }
+                    showPiece(board.chessPiece(i, j), false);
                 }
                 Console.WriteLine();
             }
-            Console.WriteLine("  A B C D E F G H");
+            Console.WriteLine("    A  B  C  D  E  F  G  H");
         }
 
-        public static void showPiece(ChessPiece cp)
+        public static void ShowBoard(BoardTab board, bool[,] possiblePositions)
         {
-            if (cp.color == Color.White)
+            ConsoleColor defaultBackground = Console.BackgroundColor;
+            ConsoleColor selectBackground = ConsoleColor.DarkGray;
+            ConsoleColor defaultTextColor = Console.ForegroundColor;
+
+            for (int i = 0; i < board.lines; i++)
             {
-                Console.Write(cp);
+                Console.Write(" " + (8 - i) + " ");
+                for (int j = 0; j < board.columns; j++)
+                {
+                    if (possiblePositions[i, j])
+                    {
+                        Console.BackgroundColor = selectBackground;
+                        Console.ForegroundColor = ConsoleColor.Green;
+                    }
+                    showPiece(board.chessPiece(i, j), true);
+                    Console.BackgroundColor = defaultBackground;
+                    Console.ForegroundColor = defaultTextColor;
+
+                }
+                Console.WriteLine();
             }
+            Console.WriteLine("    A  B  C  D  E  F  G  H");
+        }
+
+        public static void showPiece(ChessPiece cp, bool isMoveEnemy)
+        {
+            if (cp == null) Console.Write(" - ");
             else
             {
-                ConsoleColor aux = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write(cp);
-                Console.ForegroundColor = aux;
+                if (cp.color == Color.White)
+                {
+                    Console.Write(" " + cp);
+                }
+                else
+                {
+                    if (!isMoveEnemy)
+                    {
+                        ConsoleColor aux = Console.ForegroundColor;
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write(" " + cp);
+                        Console.ForegroundColor = aux;
+                    } else Console.Write(" " + cp);
+                }
+                Console.Write(" ");
             }
+
         }
 
         public static PositionChess readPositionChess()

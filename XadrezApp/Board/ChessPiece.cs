@@ -1,6 +1,6 @@
 ﻿namespace XadrezApp.Board
 {
-    internal class ChessPiece
+    internal abstract class ChessPiece
     {
         public Position position { get; set; }
         public Color color { get; set; }
@@ -19,5 +19,26 @@
         {
             this.numberOfMoves++;
         }
+
+        public bool existPossibleMoves()
+        {
+            bool[,] mat = possibleMoves();
+
+            for (int i = 0; i <board.lines; i++)
+            {
+                for (int j = 0; j < board.columns; j++)
+                {
+                    if (mat[i, j]) return true;
+                }
+            }
+            return false;
+        }
+
+        public bool canMoveToTargetPosition(Position pos)
+        {
+            return possibleMoves()[pos.line, pos.column];
+        }
+
+        public abstract bool[,] possibleMoves();
     }
 }
