@@ -8,47 +8,42 @@ namespace XadrezApp
     {
         static void Main(string[] args)
         {
-            try
+            ChessMatch chessMatch = new();
+
+            while (!chessMatch.finished)
             {
-                ChessMatch chessMatch = new();
-
-                while (!chessMatch.finished)
+                try
                 {
-                    try
-                    {
-                        Console.Clear();
-                        Screen.ShowBoard(chessMatch.board);
-                        Console.WriteLine("");
-                        Console.WriteLine("Turn: " + chessMatch.turn);
-                        Console.WriteLine("Waiting for play: " + chessMatch.actualPlayer);
+                    Console.Clear();
+                    Screen.showMatch(chessMatch);
 
-                        Console.WriteLine("");
+                    Console.WriteLine("");
 
-                        Console.Write("Origin: ");
-                        Position origin = Screen.readPositionChess().toPosition();
-                        chessMatch.validOriginPosition(origin);
+                    Console.Write("Origin: ");
+                    Position origin = Screen.readPositionChess().toPosition();
+                    chessMatch.validOriginPosition(origin);
 
-                        bool[,] possiblePositions = chessMatch.board.chessPiece(origin).possibleMoves();
+                    bool[,] possiblePositions = chessMatch.board.chessPiece(origin).possibleMoves();
 
-                        Console.Clear();
-                        Screen.ShowBoard(chessMatch.board, possiblePositions);
+                    Console.Clear();
+                    Screen.ShowBoard(chessMatch.board, possiblePositions);
 
-                        Console.WriteLine("");
+                    Console.WriteLine("");
 
-                        Console.Write("Destiny: ");
-                        Position destiny = Screen.readPositionChess().toPosition();
-                        chessMatch.validDestinyPosition(origin, destiny);
+                    Console.Write("Destiny: ");
+                    Position destiny = Screen.readPositionChess().toPosition();
+                    chessMatch.validDestinyPosition(origin, destiny);
 
-                        chessMatch.makesMove(origin, destiny);
-                    } catch (BoardException e)
-                    {
-                        Console.WriteLine(e.Message);
-                        Console.ReadLine();
-                    }
+                    chessMatch.makesMove(origin, destiny);
                 }
-
+                catch (BoardException e)
+                {
+                    Console.WriteLine(e.Message);
+                    Console.ReadLine();
+                }
             }
-            catch (BoardException e) { Console.WriteLine(e.Message); }
+            Console.Clear();
+            Screen.showMatch(chessMatch);
         }
     }
 }

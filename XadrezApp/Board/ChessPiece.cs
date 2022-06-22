@@ -20,6 +20,11 @@
             this.numberOfMoves++;
         }
 
+        public void decrementMovement()
+        {
+            this.numberOfMoves--;
+        }
+
         public bool existPossibleMoves()
         {
             bool[,] mat = possibleMoves();

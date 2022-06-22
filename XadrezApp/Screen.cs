@@ -5,6 +5,49 @@ namespace XadrezApp
 {
     internal class Screen
     {
+        public static void showMatch(ChessMatch chessMatch)
+        {
+            ShowBoard(chessMatch.board);
+            Console.WriteLine("");
+            showCapturedPieces(chessMatch);
+            Console.WriteLine("");
+            Console.WriteLine("Turn: " + chessMatch.turn);
+
+            if (!chessMatch.finished)
+            {
+                Console.WriteLine("Waiting for play: " + chessMatch.actualPlayer);
+                if (chessMatch.check) Console.WriteLine("You are in check!"); Console.WriteLine("");
+            } else
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Checkmate!");
+                Console.WriteLine("Player winner: " + chessMatch.actualPlayer);
+            }
+        }
+
+        public static void showCapturedPieces(ChessMatch chessMatch)
+        {
+            Console.WriteLine("Pieces captureds:");
+            Console.WriteLine("");
+            Console.Write("White: ");
+            showCapturedPiecesColor(chessMatch.chessPiecesHash(Color.White));
+            Console.Write("Black: ");
+            ConsoleColor aux = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            showCapturedPiecesColor(chessMatch.chessPiecesHash(Color.Black));
+            Console.ForegroundColor = aux;
+        }
+
+        public static void showCapturedPiecesColor(HashSet<ChessPiece> list)
+        {
+            Console.Write("[ ");
+            foreach(ChessPiece cp in list)
+            {
+                Console.Write(cp + " ");
+            }
+            Console.WriteLine("]");
+        }
+
         public static void ShowBoard(BoardTab board)
         {
             for (int i = 0; i < board.lines; i++)
@@ -16,7 +59,10 @@ namespace XadrezApp
                 }
                 Console.WriteLine();
             }
+            ConsoleColor aux = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("    A  B  C  D  E  F  G  H");
+            Console.ForegroundColor = aux;
         }
 
         public static void ShowBoard(BoardTab board, bool[,] possiblePositions)
@@ -30,19 +76,24 @@ namespace XadrezApp
                 Console.Write(" " + (8 - i) + " ");
                 for (int j = 0; j < board.columns; j++)
                 {
+                    bool isMoveEnemy = false;
                     if (possiblePositions[i, j])
                     {
                         Console.BackgroundColor = selectBackground;
                         Console.ForegroundColor = ConsoleColor.Green;
+                        isMoveEnemy = true;
                     }
-                    showPiece(board.chessPiece(i, j), true);
+                    showPiece(board.chessPiece(i, j), isMoveEnemy);
                     Console.BackgroundColor = defaultBackground;
                     Console.ForegroundColor = defaultTextColor;
 
                 }
                 Console.WriteLine();
             }
+            ConsoleColor aux = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("    A  B  C  D  E  F  G  H");
+            Console.ForegroundColor = aux;
         }
 
         public static void showPiece(ChessPiece cp, bool isMoveEnemy)
@@ -56,13 +107,10 @@ namespace XadrezApp
                 }
                 else
                 {
-                    if (!isMoveEnemy)
-                    {
-                        ConsoleColor aux = Console.ForegroundColor;
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write(" " + cp);
-                        Console.ForegroundColor = aux;
-                    } else Console.Write(" " + cp);
+                    ConsoleColor aux = Console.ForegroundColor;
+                    Console.ForegroundColor = isMoveEnemy ? ConsoleColor.Green : ConsoleColor.Yellow;
+                    Console.Write(" " + cp);
+                    Console.ForegroundColor = aux;
                 }
                 Console.Write(" ");
             }
